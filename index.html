@@ -24,6 +24,45 @@
             padding: 0 20px;
         }
 
+        /* Tab pages */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Bottom tab bar */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(10, 10, 10, 0.92);
+            border-top: 1px solid #1a1a1a;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            z-index: 500;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            border: none;
+            background: transparent;
+            color: #444;
+            cursor: pointer;
+            transition: color 0.15s;
+            padding-bottom: 6px;
+        }
+
+        .tab-item.active { color: #f5f5f5; }
+
+        .tab-icon { font-size: 22px; line-height: 1; }
+        .tab-label { font-size: 10px; letter-spacing: 0.5px; font-weight: 500; }
+
         /* Header */
         .header {
             text-align: center;
@@ -131,7 +170,6 @@
         }
 
         .transaction-item:active { opacity: 0.7; }
-
         .transaction-info { display: flex; align-items: center; gap: 12px; }
 
         .transaction-icon {
@@ -148,30 +186,12 @@
         .transaction-icon.income { background: rgba(52, 199, 89, 0.12); }
         .transaction-icon.expense { background: rgba(255, 59, 48, 0.12); }
 
-        .transaction-details h3 {
-            font-size: 14px;
-            font-weight: 500;
-            color: #f5f5f5;
-            margin-bottom: 2px;
-        }
+        .transaction-details h3 { font-size: 14px; font-weight: 500; color: #f5f5f5; margin-bottom: 2px; }
+        .transaction-details p { font-size: 12px; color: #444; }
 
-        .transaction-details p {
-            font-size: 12px;
-            color: #444;
-        }
+        .transaction-right { display: flex; align-items: center; gap: 10px; }
 
-        .transaction-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .transaction-amount {
-            font-size: 15px;
-            font-weight: 500;
-            letter-spacing: -0.3px;
-        }
-
+        .transaction-amount { font-size: 15px; font-weight: 500; letter-spacing: -0.3px; }
         .transaction-amount.income { color: #34c759; }
         .transaction-amount.expense { color: #ff3b30; }
 
@@ -189,22 +209,9 @@
         .delete-btn:hover { color: #ff3b30; }
 
         /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #333;
-        }
-
-        .empty-state-icon {
-            font-size: 40px;
-            margin-bottom: 12px;
-            opacity: 0.4;
-        }
-
-        .empty-state p {
-            font-size: 14px;
-            color: #444;
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: #333; }
+        .empty-state-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+        .empty-state p { font-size: 14px; color: #444; }
 
         /* Modal */
         .modal {
@@ -247,11 +254,7 @@
             margin-bottom: 24px;
         }
 
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #f5f5f5;
-        }
+        .modal-title { font-size: 18px; font-weight: 600; color: #f5f5f5; }
 
         .close-btn {
             width: 28px;
@@ -325,11 +328,7 @@
         .amount-input::placeholder { color: #2a2a2a; }
 
         /* Category grid */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
+        .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
         .category-btn {
             padding: 12px 8px;
@@ -346,12 +345,7 @@
 
         .category-btn:active { opacity: 0.7; }
 
-        .category-btn.selected {
-            border-color: #333;
-            background: #1e1e1e;
-            color: #f5f5f5;
-        }
-
+        .category-btn.selected { border-color: #333; background: #1e1e1e; color: #f5f5f5; }
         .category-emoji { font-size: 20px; display: block; margin-bottom: 4px; }
 
         /* Submit button */
@@ -391,25 +385,10 @@
 
         .breakdown-left { display: flex; align-items: center; gap: 10px; }
         .breakdown-emoji { font-size: 18px; }
+        .breakdown-name { font-size: 14px; font-weight: 500; color: #f5f5f5; }
+        .breakdown-amount { font-size: 14px; font-weight: 500; color: #ff3b30; }
 
-        .breakdown-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #f5f5f5;
-        }
-
-        .breakdown-amount {
-            font-size: 14px;
-            font-weight: 500;
-            color: #ff3b30;
-        }
-
-        .breakdown-bar-track {
-            height: 3px;
-            background: #1e1e1e;
-            border-radius: 2px;
-            overflow: hidden;
-        }
+        .breakdown-bar-track { height: 3px; background: #1e1e1e; border-radius: 2px; overflow: hidden; }
 
         .breakdown-bar-fill {
             height: 100%;
@@ -419,6 +398,63 @@
             transition: width 0.4s ease;
         }
 
+        /* Monthly page */
+        .month-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 50px 0 32px;
+        }
+
+        .month-nav-btn {
+            width: 36px;
+            height: 36px;
+            background: #111;
+            border: 1px solid #1e1e1e;
+            border-radius: 10px;
+            color: #888;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s;
+        }
+
+        .month-nav-btn:active { opacity: 0.6; }
+
+        .month-title {
+            font-size: 22px;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            color: #f5f5f5;
+        }
+
+        .month-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .month-stat {
+            background: #111;
+            border: 1px solid #1e1e1e;
+            padding: 14px 12px;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .month-stat .stat-label { margin-bottom: 6px; }
+
+        .month-stat .stat-value {
+            font-size: 17px;
+            font-weight: 400;
+            letter-spacing: -0.3px;
+        }
+
+        .stat-value.neutral { color: #f5f5f5; }
+
         /* Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -426,36 +462,84 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-label">Total Balance</div>
-            <div class="balance" id="balance">₸0</div>
-            <div class="balance-sub">Available</div>
-        </div>
 
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-label">Income</div>
-                <div class="stat-value income" id="totalIncome">₸0</div>
+    <!-- Home Tab -->
+    <div class="page active" id="page-home">
+        <div class="container">
+            <div class="header">
+                <div class="header-label">Total Balance</div>
+                <div class="balance" id="balance">₸0</div>
+                <div class="balance-sub">All time</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Expenses</div>
-                <div class="stat-value expense" id="totalExpense">₸0</div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-label">Income</div>
+                    <div class="stat-value income" id="totalIncome">₸0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Expenses</div>
+                    <div class="stat-value expense" id="totalExpense">₸0</div>
+                </div>
+            </div>
+
+            <button class="add-btn" onclick="openModal()">+ Add Transaction</button>
+
+            <div class="section-title">By Category</div>
+            <div class="breakdown-list" id="breakdownList"></div>
+
+            <div class="section-title">Recent</div>
+            <div class="transaction-list" id="transactionList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">○</div>
+                    <p>No transactions yet</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <button class="add-btn" onclick="openModal()">+ Add Transaction</button>
-
-        <div class="section-title">By Category</div>
-        <div class="breakdown-list" id="breakdownList"></div>
-
-        <div class="section-title">Recent</div>
-        <div class="transaction-list" id="transactionList">
-            <div class="empty-state">
-                <div class="empty-state-icon">○</div>
-                <p>No transactions yet</p>
+    <!-- Monthly Tab -->
+    <div class="page" id="page-monthly">
+        <div class="container">
+            <div class="month-nav">
+                <button class="month-nav-btn" onclick="changeMonth(-1)">‹</button>
+                <span class="month-title" id="monthTitle"></span>
+                <button class="month-nav-btn" onclick="changeMonth(1)">›</button>
             </div>
+
+            <div class="month-stats">
+                <div class="month-stat">
+                    <div class="stat-label">Income</div>
+                    <div class="stat-value income" id="mIncome">₸0</div>
+                </div>
+                <div class="month-stat">
+                    <div class="stat-label">Expenses</div>
+                    <div class="stat-value expense" id="mExpense">₸0</div>
+                </div>
+                <div class="month-stat">
+                    <div class="stat-label">Net</div>
+                    <div class="stat-value neutral" id="mNet">₸0</div>
+                </div>
+            </div>
+
+            <div class="section-title">By Category</div>
+            <div class="breakdown-list" id="mBreakdownList"></div>
+
+            <div class="section-title">Transactions</div>
+            <div class="transaction-list" id="mTransactionList"></div>
         </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <button class="tab-item active" id="tab-home" onclick="switchTab('home')">
+            <span class="tab-icon">○</span>
+            <span class="tab-label">Home</span>
+        </button>
+        <button class="tab-item" id="tab-monthly" onclick="switchTab('monthly')">
+            <span class="tab-icon">◫</span>
+            <span class="tab-label">Monthly</span>
+        </button>
     </div>
 
     <!-- Modal -->
@@ -490,6 +574,10 @@
         let currentType = 'expense';
         let selectedCategory = null;
 
+        const now = new Date();
+        let viewYear = now.getFullYear();
+        let viewMonth = now.getMonth();
+
         const categories = {
             income: ['Stipend', 'Turlan aga', 'Father', 'Other'],
             expense: ['Cafes', 'Cigarettes', 'Clothing', 'Entertainment', 'Food', 'Kaspi Payment', 'Other', 'Sports', 'Study', 'Subscriptions', 'Taxi', 'Transport']
@@ -504,7 +592,94 @@
 
         updateUI();
         renderCategories();
+        renderMonthly();
 
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById('page-' + tab).classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        // Month navigation
+        function changeMonth(dir) {
+            viewMonth += dir;
+            if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+            if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+            renderMonthly();
+        }
+
+        function renderMonthly() {
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            document.getElementById('monthTitle').textContent = `${monthNames[viewMonth]} ${viewYear}`;
+
+            const monthTx = transactions.filter(t => {
+                const d = new Date(t.date);
+                return d.getFullYear() === viewYear && d.getMonth() === viewMonth;
+            });
+
+            const income = monthTx.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const expense = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            const net = income - expense;
+
+            document.getElementById('mIncome').textContent = `₸${income.toLocaleString()}`;
+            document.getElementById('mExpense').textContent = `₸${expense.toLocaleString()}`;
+
+            const netEl = document.getElementById('mNet');
+            netEl.textContent = `₸${Math.abs(net).toLocaleString()}`;
+            netEl.className = `stat-value ${net >= 0 ? 'income' : 'expense'}`;
+
+            // Category breakdown
+            const breakdownEl = document.getElementById('mBreakdownList');
+            const expTx = monthTx.filter(t => t.type === 'expense');
+            if (expTx.length === 0) {
+                breakdownEl.innerHTML = `<div class="empty-state" style="padding:24px 20px"><p>No expenses this month</p></div>`;
+            } else {
+                const totals = {};
+                expTx.forEach(t => { totals[t.category] = (totals[t.category] || 0) + t.amount; });
+                const max = Math.max(...Object.values(totals));
+                const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+                breakdownEl.innerHTML = sorted.map(([cat, total]) => `
+                    <div class="breakdown-item">
+                        <div class="breakdown-row">
+                            <div class="breakdown-left">
+                                <span class="breakdown-emoji">${icons[cat] || '📁'}</span>
+                                <span class="breakdown-name">${cat}</span>
+                            </div>
+                            <span class="breakdown-amount">−₸${total.toLocaleString()}</span>
+                        </div>
+                        <div class="breakdown-bar-track">
+                            <div class="breakdown-bar-fill" style="width:${(total/max*100).toFixed(1)}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Transaction list
+            const listEl = document.getElementById('mTransactionList');
+            if (monthTx.length === 0) {
+                listEl.innerHTML = `<div class="empty-state"><div class="empty-state-icon">○</div><p>No transactions this month</p></div>`;
+            } else {
+                listEl.innerHTML = monthTx.map(t => `
+                    <div class="transaction-item">
+                        <div class="transaction-info">
+                            <div class="transaction-icon ${t.type}">${icons[t.category] || '📁'}</div>
+                            <div class="transaction-details">
+                                <h3>${t.category}</h3>
+                                <p>${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                            </div>
+                        </div>
+                        <div class="transaction-right">
+                            <span class="transaction-amount ${t.type}">${t.type === 'income' ? '+' : '−'}₸${t.amount.toLocaleString()}</span>
+                            <button class="delete-btn" onclick="deleteTransaction(${t.id})">×</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Modal
         function openModal() {
             document.getElementById('modal').classList.add('active');
             document.getElementById('amount').value = '';
@@ -554,6 +729,7 @@
 
             localStorage.setItem('financeTransactions', JSON.stringify(transactions));
             updateUI();
+            renderMonthly();
             closeModal();
         }
 
@@ -562,6 +738,7 @@
                 transactions = transactions.filter(t => t.id !== id);
                 localStorage.setItem('financeTransactions', JSON.stringify(transactions));
                 updateUI();
+                renderMonthly();
             }
         }
 
@@ -576,14 +753,38 @@
             document.getElementById('totalIncome').textContent = `₸${income.toLocaleString()}`;
             document.getElementById('totalExpense').textContent = `₸${expense.toLocaleString()}`;
 
+            // Breakdown
+            const breakdown = document.getElementById('breakdownList');
+            const expTx = transactions.filter(t => t.type === 'expense');
+            if (expTx.length === 0) {
+                breakdown.innerHTML = `<div class="empty-state" style="padding:24px 20px"><p>No expenses yet</p></div>`;
+            } else {
+                const totals = {};
+                expTx.forEach(t => { totals[t.category] = (totals[t.category] || 0) + t.amount; });
+                const max = Math.max(...Object.values(totals));
+                const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+                breakdown.innerHTML = sorted.map(([cat, total]) => `
+                    <div class="breakdown-item">
+                        <div class="breakdown-row">
+                            <div class="breakdown-left">
+                                <span class="breakdown-emoji">${icons[cat] || '📁'}</span>
+                                <span class="breakdown-name">${cat}</span>
+                            </div>
+                            <span class="breakdown-amount">−₸${total.toLocaleString()}</span>
+                        </div>
+                        <div class="breakdown-bar-track">
+                            <div class="breakdown-bar-fill" style="width:${(total/max*100).toFixed(1)}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Recent list
             const list = document.getElementById('transactionList');
             if (transactions.length === 0) {
-                updateBreakdown();
                 list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">○</div><p>No transactions yet</p></div>`;
                 return;
             }
-
-            updateBreakdown();
 
             list.innerHTML = transactions.map(t => `
                 <div class="transaction-item">
@@ -597,39 +798,6 @@
                     <div class="transaction-right">
                         <span class="transaction-amount ${t.type}">${t.type === 'income' ? '+' : '−'}₸${t.amount.toLocaleString()}</span>
                         <button class="delete-btn" onclick="deleteTransaction(${t.id})">×</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateBreakdown() {
-            const breakdown = document.getElementById('breakdownList');
-            const expenseTransactions = transactions.filter(t => t.type === 'expense');
-
-            if (expenseTransactions.length === 0) {
-                breakdown.innerHTML = `<div class="empty-state" style="padding: 30px 20px;"><p>No expenses yet</p></div>`;
-                return;
-            }
-
-            const totals = {};
-            expenseTransactions.forEach(t => {
-                totals[t.category] = (totals[t.category] || 0) + t.amount;
-            });
-
-            const max = Math.max(...Object.values(totals));
-            const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-
-            breakdown.innerHTML = sorted.map(([cat, total]) => `
-                <div class="breakdown-item">
-                    <div class="breakdown-row">
-                        <div class="breakdown-left">
-                            <span class="breakdown-emoji">${icons[cat] || '📁'}</span>
-                            <span class="breakdown-name">${cat}</span>
-                        </div>
-                        <span class="breakdown-amount">−₸${total.toLocaleString()}</span>
-                    </div>
-                    <div class="breakdown-bar-track">
-                        <div class="breakdown-bar-fill" style="width: ${(total / max * 100).toFixed(1)}%"></div>
                     </div>
                 </div>
             `).join('');
