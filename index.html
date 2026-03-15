@@ -469,7 +469,10 @@
             <div class="header">
                 <div class="header-label">Total Balance</div>
                 <div class="balance" id="balance">₸0</div>
-                <div class="balance-sub">All time</div>
+                <div class="balance-sub" style="display:flex;align-items:center;justify-content:center;gap:6px;">
+                    All time &nbsp;·&nbsp;
+                    <span style="color:#555;cursor:pointer;font-size:11px;text-decoration:underline;text-underline-offset:2px;" onclick="editStartingBalance()">Starting: ₸<span id="startingBalanceDisplay">0</span></span>
+                </div>
             </div>
 
             <div class="stats">
@@ -565,14 +568,29 @@
                 <div class="category-grid" id="categoryGrid"></div>
             </div>
 
+            <div class="form-group" id="subcategoryGroup" style="display:none;">
+                <label class="form-label">Subcategory</label>
+                <div class="category-grid" id="subcategoryGrid"></div>
+            </div>
+
             <button class="submit-btn" onclick="submitTransaction()">Add Transaction</button>
         </div>
     </div>
 
     <script>
         let transactions = JSON.parse(localStorage.getItem('financeTransactions')) || [];
+        let startingBalance = parseFloat(localStorage.getItem('startingBalance')) || 0;
         let currentType = 'expense';
         let selectedCategory = null;
+        let selectedSubcategory = null;
+
+        const subcategories = {
+            'Food': ['Canteen', 'Delivery', 'Groceries', 'Market']
+        };
+
+        const subicons = {
+            'Canteen': '🍽️', 'Delivery': '🛵', 'Groceries': '🛒', 'Market': '🥬'
+        };
 
         const now = new Date();
         let viewYear = now.getFullYear();
@@ -664,10 +682,10 @@
                 listEl.innerHTML = monthTx.map(t => `
                     <div class="transaction-item">
                         <div class="transaction-info">
-                            <div class="transaction-icon ${t.type}">${icons[t.category] || '📁'}</div>
+                            <div class="transaction-icon ${t.type}">${t.subcategory ? subicons[t.subcategory] || '📁' : icons[t.category] || '📁'}</div>
                             <div class="transaction-details">
-                                <h3>${t.category}</h3>
-                                <p>${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                                <h3>${t.subcategory ? t.subcategory : t.category}</h3>
+                                <p>${t.subcategory ? t.category + ' · ' : ''}${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
                             </div>
                         </div>
                         <div class="transaction-right">
@@ -684,6 +702,7 @@
             document.getElementById('modal').classList.add('active');
             document.getElementById('amount').value = '';
             selectedCategory = null;
+            selectedSubcategory = null;
             renderCategories();
             setTimeout(() => document.getElementById('amount').focus(), 300);
         }
@@ -697,6 +716,7 @@
             document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.type-btn.${type}`).classList.add('active');
             selectedCategory = null;
+            selectedSubcategory = null;
             renderCategories();
         }
 
@@ -711,19 +731,43 @@
 
         function selectCategory(cat) {
             selectedCategory = cat;
+            selectedSubcategory = null;
             renderCategories();
+            const group = document.getElementById('subcategoryGroup');
+            if (subcategories[cat]) {
+                group.style.display = 'block';
+                renderSubcategories();
+            } else {
+                group.style.display = 'none';
+            }
+        }
+
+        function selectSubcategory(sub) {
+            selectedSubcategory = sub;
+            renderSubcategories();
+        }
+
+        function renderSubcategories() {
+            const grid = document.getElementById('subcategoryGrid');
+            grid.innerHTML = subcategories[selectedCategory].map(sub => `
+                <button class="category-btn ${selectedSubcategory === sub ? 'selected' : ''}" onclick="selectSubcategory('${sub}')">
+                    <span class="category-emoji">${subicons[sub] || '📁'}</span>${sub}
+                </button>
+            `).join('');
         }
 
         function submitTransaction() {
             const amount = parseFloat(document.getElementById('amount').value);
             if (!amount || amount <= 0) { alert('Please enter an amount'); return; }
             if (!selectedCategory) { alert('Please select a category'); return; }
+            if (subcategories[selectedCategory] && !selectedSubcategory) { alert('Please select a subcategory'); return; }
 
             transactions.unshift({
                 id: Date.now(),
                 type: currentType,
                 amount,
                 category: selectedCategory,
+                subcategory: selectedSubcategory || null,
                 date: new Date().toISOString()
             });
 
@@ -745,8 +789,9 @@
         function updateUI() {
             const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
             const expense = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-            const balance = income - expense;
+            const balance = startingBalance + income - expense;
 
+            document.getElementById('startingBalanceDisplay').textContent = startingBalance.toLocaleString();
             const balanceEl = document.getElementById('balance');
             balanceEl.textContent = `₸${balance.toLocaleString()}`;
             balanceEl.className = `balance ${balance > 0 ? 'positive' : balance < 0 ? 'negative' : ''}`;
@@ -791,8 +836,8 @@
                     <div class="transaction-info">
                         <div class="transaction-icon ${t.type}">${icons[t.category] || '📁'}</div>
                         <div class="transaction-details">
-                            <h3>${t.category}</h3>
-                            <p>${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                            <h3>${t.subcategory ? t.subcategory : t.category}</h3>
+                            <p>${t.subcategory ? t.category + ' · ' : ''}${new Date(t.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
                         </div>
                     </div>
                     <div class="transaction-right">
@@ -801,6 +846,16 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function editStartingBalance() {
+            const val = prompt('Set starting balance (₸):', startingBalance);
+            if (val === null) return;
+            const parsed = parseFloat(val);
+            if (isNaN(parsed)) { alert('Please enter a valid number'); return; }
+            startingBalance = parsed;
+            localStorage.setItem('startingBalance', startingBalance);
+            updateUI();
         }
 
         document.getElementById('modal').addEventListener('click', e => {
